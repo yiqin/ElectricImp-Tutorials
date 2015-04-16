@@ -18,8 +18,8 @@ page <- @"
         Create a web form which will take a date/time as an argument.<br>
       </p>
 
-      <input type='date' id='myDate' value='2014-02-09'>
-      <input type='time' id='myTime' value='22:15:00'>
+      <input type='date' id='myDate' value='2014-02-09' min='2015-04-16'>
+      <input type='time' id='myTime' value='00:00:00'>
       
       <p id='demo'></p>
       <p>
@@ -45,6 +45,7 @@ page <- @"
       }
       
       function httpGet(unixTimestamp) {
+          alert('send http get request')
           var xmlHttp = null;
           var url = 'https://agent.electricimp.com/ZoCftFpbR37S?led='+unixTimestamp.toString()
           xmlHttp = new XMLHttpRequest();
@@ -57,20 +58,6 @@ page <- @"
   </html>
 "
 
-function requestHandler(request, response) {
-  try {
-    if ("led" in request.query) {
-      if (request.query.led == "1" || request.query.led == "0") {
-        local ledState = request.query.led.tointeger();
-        device.send("led", ledState); 
-      }
-    }
-    response.send(200, "OK");
-  } catch (ex) {
-    response.send(500, "Internal Server Error: " + ex);
-  }
-}
- 
 // register the HTTP handler
 http.onrequest(function(request, response) {
   try {
@@ -91,5 +78,3 @@ http.onrequest(function(request, response) {
     response.send(500, error)
   }
 })
-
-

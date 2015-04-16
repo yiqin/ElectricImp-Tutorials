@@ -7,10 +7,17 @@ led.configure(DIGITAL_OUT);
  
 // function to turn LED on or off
 function setLed(ledState) {
-  server.log("Set LED: " + ledState);
-  
+  led.write(0);
   local currentTime = time();
-  imp.wakeup(ledState-currentTime, turnOn);
+  local waitTime = ledState.tointeger()-currentTime
+  if (waitTime >= -59){
+      imp.wakeup(waitTime, turnOn);
+      server.log("Please wait for "+waitTime+" to turn on the led")
+  }
+  else {
+      server.log("The scheduled time has passed.")
+  }
+  
 }
 
 function turnOn() {

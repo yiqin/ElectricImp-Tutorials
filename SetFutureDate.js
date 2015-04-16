@@ -1,9 +1,6 @@
 // Log the URLs we need
 server.log("Open " + http.agenturl());
 
-fname <- "Electric"
-lname <- "Imp"
-message <- "lalalal"
 unixTimestamp <- 0
 
 page <- @"
@@ -18,7 +15,13 @@ page <- @"
         Create a web form which will take a date/time as an argument.<br>
       </p>
 
-      <input type='date' id='myDate' value='2014-02-09' min='2015-04-16'>
+      <p id='currentTime'></p>
+
+      <script>
+         document.getElementById('currentTime').innerHTML = Date();
+      </script>
+
+      <input type='date' id='myDate' value='2015-04-16' min='2015-04-16'>
       <input type='time' id='myTime' value='00:00:00'>
       
       <p id='demo'></p>
@@ -26,12 +29,6 @@ page <- @"
         <button onclick='myFunction()'>Set Date and Time</button>
       </p>
       
-      <p>
-          <form method='POST'>
-             
-             <input type='submit' value='Submit'>
-          </form>
-      </p>
       
       <script>
       function myFunction() {
@@ -41,10 +38,10 @@ page <- @"
           var inputDate = new Date(x+' '+y)
           unixTimestamp  = Math.round(new Date(inputDate).getTime()/1000)
           
-          httpGet(unixTimestamp)
+          httpPost(unixTimestamp)
       }
       
-      function httpGet(unixTimestamp) {
+      function httpPost(unixTimestamp) {
           alert('send http get request')
           var xmlHttp = null;
           var url = 'https://agent.electricimp.com/ZoCftFpbR37S?led='+unixTimestamp.toString()

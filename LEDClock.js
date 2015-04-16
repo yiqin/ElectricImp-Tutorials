@@ -51,7 +51,6 @@ function blinkOn1() {
 
     if (nowSecond <= nowHour) {
         led.write(1)
-        server.log("hour: "+nowHour)         
         imp.wakeup(0.5, blinkOff1) 
     }
 }
@@ -70,7 +69,6 @@ function blinkOn2() {
 
     if (nowSecond <= nowHour+2+nowMinute*0.4) {
         led.write(1)
-        server.log("minute: "+nowMinute)         
         imp.wakeup(0.2, blinkOff2) 
     }
 }

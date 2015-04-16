@@ -1,10 +1,10 @@
 // Log the URLs we need
-server.log("Turn LED On: " + http.agenturl() + "?led=1");
-server.log("Turn LED Off: " + http.agenturl() + "?led=0");
+server.log("Open " + http.agenturl());
 
 fname <- "Electric"
 lname <- "Imp"
-message <- ""
+message <- "lalalal"
+unixTimestamp <- 0
 
 page <- @"
   <!DOCTYPE html>
@@ -13,40 +13,58 @@ page <- @"
       <title>My Form</title>
     </head>
     <body>
-      <h1>My Form</h1>
-      <form method='POST'>
-        <p>First name:<br>
-        <input type='text' name='firstname' value='Electric'>
-        <br>
-        Last name:<br>
-        <input type='text' name='lastname' value='Imp'>
 
-        <br><br>
-<input type='submit' name='submitbutton' value='Submit'>
-<br>
-<input type='submit' name='clearbutton' value='Clear'>
+      <p>
+        Create a web form which will take a date/time as an argument.<br>
+      </p>
 
-      </form>
+      <input type='date' id='myDate' value='2014-02-09'>
+      <input type='time' id='myTime' value='22:15:00'>
+      
+      <p id='demo'></p>
+      <p>
+        <button onclick='myFunction()'>Set Date and Time</button>
+      </p>
+      
+      <p>
+          <form method='POST'>
+             
+             <input type='submit' value='Submit'>
+          </form>
+      </p>
+      
+      <script>
+      function myFunction() {
+          var x = document.getElementById('myDate').value;
+          var y = document.getElementById('myTime').value;
+          document.getElementById('demo').innerHTML = x+' '+y;
+          var inputDate = new Date(x+' '+y)
+          unixTimestamp  = Math.round(new Date(inputDate).getTime()/1000)
+          
+          httpGet(unixTimestamp)
+      }
+      
+      function httpGet(unixTimestamp) {
+          var xmlHttp = null;
+          var url = 'https://agent.electricimp.com/ZoCftFpbR37S?led='+unixTimestamp.toString()
+          xmlHttp = new XMLHttpRequest();
+          xmlHttp.open( 'POST', url, false );
+          xmlHttp.send(null);
+      }
+      </script>
+
     </body>
   </html>
 "
 
-
 function requestHandler(request, response) {
   try {
-    // check if the user sent led as a query parameter
     if ("led" in request.query) {
-      
-      // if they did, and led=1.. set our variable to 1
       if (request.query.led == "1" || request.query.led == "0") {
-        // convert the led query parameter to an integer
         local ledState = request.query.led.tointeger();
- 
-        // send "led" message to device, and send ledState as the data
         device.send("led", ledState); 
       }
     }
-    // send a response back saying everything was OK.
     response.send(200, "OK");
   } catch (ex) {
     response.send(500, "Internal Server Error: " + ex);
@@ -54,38 +72,24 @@ function requestHandler(request, response) {
 }
  
 // register the HTTP handler
-http.onrequest(function(request, response)
-{
-  try 
-  {
+http.onrequest(function(request, response) {
+  try {
     local method = request.method.toupper()
-        
-    if (method == "POST") 
-    {
-      local data = http.urldecode(request.body);
-      server.log(data.firstname)
-                
-      if ("submitbutton" in data)
-      {
-        server.log(data.firstname)
-        fname = data.firstname
-        lname = data.lastname
-        message = "Settings updated"
-      }
-      else if ("clearbutton" in data)
-      {
-        fname = ""
-        lname = ""
-        message = ""
-      }
+    if (method == "POST") {
+        if ("led" in request.query) {
+            local data = http.urldecode(request.body);
+            server.log("Unix Timestamp "+request.query.led)
+            device.send("led", request.query.led); 
+        }
+        response.send(200, page)
     }
-    else
-    {
+    else {
       response.send(200, page)
     }
   }
-  catch(error)
-  {
+  catch(error) {
     response.send(500, error)
   }
 })
+
+

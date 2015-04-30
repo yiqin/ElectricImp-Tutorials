@@ -1,6 +1,7 @@
 // DEVICE CODE
-  server.log("Use Pin 7 ");
-  
+ 
+ server.log("Use Pin 7 ");
+ 
 class NeoPixels {
     
     // This class uses SPI to emulate the newpixels' one-wire protocol. 
@@ -131,8 +132,8 @@ greenDel <- 1
 blueDel <- 1
  
 redOn <- true
-greenOn <- false
-blueOn <- false
+greenOn <- true
+blueOn <- true
  
 timer <- null
 pixel <- 0
@@ -209,8 +210,8 @@ function looperinit(dummy)
     blueDel = COLORDELTA
  
     redOn = true
-    greenOn = false
-    blueOn = false
+    greenOn = true
+    blueOn = true
     
     pixel = 0
     pDelta = 1
@@ -435,9 +436,11 @@ agent.on("looper", looperinit)
 agent.on("larson", larsoninit)
 agent.on("random", randominit)
 agent.on("setcolor", setColor)
+
+
  
 // Pick a random effect to begin with
- 
+/*
 switch (0)
 {
     case 0:
@@ -455,3 +458,4 @@ switch (0)
     case 3:
         larsoninit(true)
 }
+*/

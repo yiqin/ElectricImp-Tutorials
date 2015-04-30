@@ -1,5 +1,7 @@
 // AGENT CODE
- 
+ // Log the URLs we need
+server.log("Open " + http.agenturl());
+
 function requestHandler(request, response)
 {
     try

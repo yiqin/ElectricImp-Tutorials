@@ -3,17 +3,13 @@ server.log("Hello from the device!")
 // create a global variabled called led, 
 // and assign pin9 to it
 led <- hardware.pin9;
-
 photocell <- hardware.pin2;
 
 // configure led to be a digital output
 led.configure(DIGITAL_OUT);
-
 photocell.configure(ANALOG_IN);
  
-
 const LIGHT_VALUE = 40000.0
-
 
 // function to turn LED on or off
 function setLed(ledState) {
